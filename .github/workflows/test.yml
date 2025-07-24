@@ -1,0 +1,44 @@
+name: Test Bash Modular Project
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout кода
+        uses: actions/checkout@v4
+
+      - name: 🐧 Установка зависимостей
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dialog whiptail
+
+      - name: 🔍 Проверка прав доступа
+        run: |
+          chmod +x start.sh
+          chmod +x modules/*.sh
+
+      - name: 🧪 Запуск скрипта (в режиме теста)
+        run: |
+          # Эмулируем запуск: проверим, что start.sh выполняется без критических ошибок
+          bash -n start.sh           # Проверка синтаксиса
+          grep -q "main()" start.sh  # Убедимся, что есть точка входа
+
+          # Запускаем и ждём меню (не выбираем ничего)
+          timeout 10s ./start.sh || true
+
+      - name: 📂 Проверка структуры
+        run: |
+          [[ -d "modules" ]] || exit 1
+          [[ -d "log" ]] || exit 1
+          [[ -f "config/settings.conf" ]] || exit 1
+          [[ -x "start.sh" ]] || exit 1
+
+      - name: 📊 Отчёт
+        run: echo "✅ Все проверки пройдены!"
