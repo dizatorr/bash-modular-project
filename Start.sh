@@ -1,108 +1,107 @@
-# start.sh
 #!/usr/bin/env bash
+# start.sh — точка входа
 
-# Защита от source
-if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-    echo "Ошибка: запускайте через ./start.sh" >&2
+# === Загрузка библиотеки ===
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source "$SCRIPT_DIR/lib.sh" || {
+    echo "FATAL: Не удалось загрузить lib.sh"
+    exit 1
+}
+
+# === Путь к модулям ===
+MODULE_DIR="$SCRIPT_DIR/modules"
+if [[ ! -d "$MODULE_DIR" ]]; then
+    log_error "Папка модулей '$MODULE_DIR' не найдена!"
     exit 1
 fi
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_FILE="$SCRIPT_DIR/lib.sh"
-CONFIG_FILE="$SCRIPT_DIR/config/settings.conf"
+# === Проверка TUI утилит ===
+check_tui() {
+    case "$USE_TUI" in
+        "dialog") command -v dialog >/dev/null || USE_TUI="text" ;;
+        "whiptail") command -v whiptail >/dev/null || USE_TUI="text" ;;
+        *) USE_TUI="text" ;;
+    esac
+}
 
-# Проверка lib.sh
-if [[ ! -f "$LIB_FILE" ]]; then
-    echo "FATAL: Не найден lib.sh" >&2
-    exit 1
-fi
-source "$LIB_FILE" || exit 1
+# === Сбор модулей ===
+scripts=()
+menu_items=()
+function_names=()
 
-# Загрузка конфига
-[[ -f "$CONFIG_FILE" ]] && source "$CONFIG_FILE" || log_critical "Не найден settings.conf"
+for file in "$MODULE_DIR"/*.sh; do
+    [[ -x "$file" ]] || continue
 
-# Блокировка
-LOCK_FILE="${LOCK_FILE:-/tmp/dizatorr_project.lock}"
-acquire_lock() {
-    if [[ -f "$LOCK_FILE" ]]; then
-        if kill -0 "$(cat "$LOCK_FILE" 2>/dev/null)" 2>/dev/null; then
-            log_warning "Проект уже запущен (PID: $(cat "$LOCK_FILE"))."
-            exit 0
-        else
-            rm -f "$LOCK_FILE"
-        fi
+    menu=$(grep '^# === MENU:' "$file" | head -n1 | cut -d':' -f2- | xargs)
+    func=$(grep '^# === FUNC:' "$file" | head -n1 | cut -d':' -f2- | xargs)
+
+    if [[ -n "$menu" && -n "$func" ]]; then
+        scripts+=("$file")
+        menu_items+=("$menu")
+        function_names+=("$func")
     fi
-    echo $$ > "$LOCK_FILE"
-}
-release_lock() { [[ -f "$LOCK_FILE" ]] && rm -f "$LOCK_FILE"; }
+done
 
-# Обработка сигналов
-trap 'log_info "Прервано (Ctrl+C)."; release_lock; exit 0' INT
-trap 'log_info "Получен SIGTERM."; release_lock; exit 0' TERM
-trap 'release_lock' EXIT
+if [[ ${#scripts[@]} -eq 0 ]]; then
+    log_error "Нет доступных модулей в '$MODULE_DIR'."
+    echo "Пожалуйста, добавьте модули в папку modules/."
+    exit 1
+fi
 
-# Проверка зависимостей
-check_deps() {
-    local missing=()
-    command -v dialog >/dev/null || missing+=("dialog")
-    command -v whiptail >/dev/null || missing+=("whiptail")
-    (( ${#missing[@]} > 0 )) && log_warning "TUI-инструменты не найдены: ${missing[*]}"
-    (( BASH_VERSINFO[0] < 4 )) && log_critical "Требуется Bash >= 4.0"
-}
-
-# Главное меню
+# === Главная функция запуска ===
 main() {
     acquire_lock
-    log_info "Запуск Bash Modular Project v0.1"
-    check_deps
-    cleanup_old_logs
+    cleanup_logs
+    check_tui
 
-    local mod_dir="$SCRIPT_DIR/modules"
-    [[ ! -d "$mod_dir" ]] && log_critical "Нет папки modules/"
+    log_info "Проект запущен. Доступно модулей: ${#scripts[@]}"
 
-    local -a scripts=() menu_items=() func_names=()
+    while true; do
+        local choice=""
 
-    while IFS= read -r -d '' file; do
-        local menu=$(grep -m1 '^# === MENU:' "$file" | cut -d: -f2- | xargs)
-        local func=$(grep -m1 '^# === FUNC:' "$file" | cut -d: -f2- | xargs)
-        if [[ -n "$menu" && -n "$func" ]]; then
-            scripts+=("$file")
-            menu_items+=("$menu")
-            func_names+=("$func")
+        case "$USE_TUI" in
+            "dialog")
+                choice=$(show_menu_dialog)
+                ;;
+            "whiptail")
+                choice=$(show_menu_whiptail)
+                ;;
+            *)
+                show_menu_text
+                read -p $'Выберите номер или '\''q'\'' для выхода: ' choice
+                ;;
+        esac
+
+        if [[ "$choice" == "q" ]]; then
+            log_info "Завершение работы по выбору пользователя."
+            break
+        elif [[ "$choice" =~ ^[0-9]+$ && $choice -lt ${#scripts[@]} ]]; then
+            local script="${scripts[$choice]}"
+            local func="${function_names[$choice]}"
+
+            log_info "Запуск модуля: $func из $(basename "$script")"
+
+            # Выполняем модуль
+            source "$script"
+            if declare -f "$func" >/dev/null; then
+                "$func"
+            else
+                log_error "Функция '$func' не найдена в '$script'"
+                echo -e "${RED}Ошибка: функция недоступна.${NC}"
+            fi
+
+            echo -e "${YELLOW}Нажмите Enter для возврата в меню...${NC}"
+            read
+        else
+            log_warn "Некорректный ввод: '$choice'"
+            echo -e "${RED}Неверный выбор.${NC}"
+            sleep 1
         fi
-    done < <(find "$mod_dir" -name "*.sh" -type f -executable -print0 2>/dev/null)
-
-    (( ${#menu_items[@]} == 0 )) && {
-        log_warning "Модули не найдены в $mod_dir"
-        show_message "Внимание" "Добавьте .sh файлы в папку modules/ и сделайте их исполняемыми (chmod +x)"
-        exit 0
-    }
-
-    # Формируем меню
-    local -a items=()
-    for i in "${!menu_items[@]}"; do
-        items+=("$((i+1))" "${menu_items[i]}")
     done
 
-    local choice
-    if command -v dialog >/dev/null; then
-        choice=$(dialog --clear --backtitle "Bash Modular Project" \
-            --menu "Выберите модуль:" 15 60 10 "${items[@]}" 3>&1 1>&2 2>&3)
-    elif command -v whiptail >/dev/null; then
-        choice=$(whiptail --clear --backtitle "Bash Modular Project" \
-            --menu "Выберите модуль:" 15 60 10 "${items[@]}" 3>&1 1>&2 2>&3)
-    else
-        log_critical "Нет dialog/whiptail. Установите: sudo apt install dialog"
-    fi
-
-    [[ -z "$choice" ]] && { log_info "Выход без выбора."; exit 0; }
-
-    local idx=$((choice - 1))
-    if (( idx >= 0 && idx < ${#scripts[@]} )); then
-        source "${scripts[idx]}" && "${func_names[idx]}"
-    else
-        log_error "Неверный выбор: $choice"
-    fi
+    release_lock
+    log_info "Работа завершена."
 }
 
+# === Запуск ===
 main "$@"
