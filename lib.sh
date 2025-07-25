@@ -45,7 +45,7 @@ log() {
         "DEBUG") color="$BLUE" ;;
     esac
 
-    echo -e "${color}[$level] $timestamp — $msg${NC}"
+    echo -e "${color}[$level] $timestamp — $msg${NC}" >&2
     echo "[$level] $timestamp — $msg" >> "$log_file"
 }
 
@@ -63,6 +63,13 @@ cleanup_logs() {
 # === Обработка сигналов ===
 trap_handler() {
     log_warn "Получен сигнал $1. Завершение работы..."
+    
+    # Если модуль диагностики был запущен — восстановить сеть
+    if declare -f restore_network >/dev/null; then
+        log_info "Восстанавливаем сеть после прерывания..."
+        restore_network
+    fi
+
     rm -f "$LOCKFILE"
     exit 1
 }
