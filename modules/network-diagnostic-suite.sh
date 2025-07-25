@@ -242,6 +242,11 @@ scan_network() {
 
 # === Восстановление сети через NM ===
 restore_network() {
+    if [[ "$DIAG_IN_PROGRESS" != "true" ]]; then
+        log_debug "Сеть уже восстановлена, пропускаем"
+        return 0
+    fi
+
     log_info "Восстанавливаем интернет-соединение..."
 
     # Остановка dnsmasq
@@ -267,11 +272,13 @@ restore_network() {
     else
         log_warn "Нет активного соединения для восстановления"
     fi
+    DIAG_IN_PROGRESS=false
 }
 
 # === Очистка при выходе ===
 cleanup() {
     if [[ "$DIAG_IN_PROGRESS" == "true" ]]; then
+        log_warn "Модуль прерван аварийно. Восстанавливаем сеть..."
         restore_network
     fi
 }
@@ -279,6 +286,7 @@ cleanup() {
 # === Главная функция ===
 network_diagnostic_suite() {
     log_info "Запуск: Диагностика сети (Полный пакет)"
+    log_info "Подсказка: выберите 'Выход без восстановления', чтобы оставить dnsmasq в фоне"
 
     if [[ $EUID -ne 0 ]]; then
         log_error "Требуются права root"
@@ -290,7 +298,6 @@ network_diagnostic_suite() {
         return 1
     fi
 
-    # Устанавливаем очистку
     trap cleanup EXIT
     DIAG_IN_PROGRESS=true
 
@@ -304,21 +311,24 @@ network_diagnostic_suite() {
         local choice=""
         case "$USE_TUI" in
             "dialog")
-                choice=$(dialog --clear --title "Сеть" --menu "Действие:" 15 60 5 \
-                    "1" "Настроить диагностику" \
-                    "2" "Восстановить и выйти" \
+                choice=$(dialog --clear --title "Сеть" --menu "Действие:" 16 65 6 \
+                    "1" "Настроить диагностику (DHCP/DNS)" \
+                    "2" "Восстановить сеть и выйти" \
+                    "3" "Выйти, оставив dnsmasq в фоне" \
                     3>&1 1>&2 2>&3)
                 ;;
             "whiptail")
-                choice=$(whiptail --title "Сеть" --menu "Действие:" 15 60 5 \
-                    "1" "Настроить диагностику" \
-                    "2" "Восстановить и выйти" \
+                choice=$(whiptail --title "Сеть" --menu "Действие:" 16 65 6 \
+                    "1" "Настроить диагностику (DHCP/DNS)" \
+                    "2" "Восстановить сеть и выйти" \
+                    "3" "Выйти, оставив dnsmasq в фоне" \
                     3>&1 1>&2 2>&3)
                 ;;
             *)
                 echo -e "${BLUE}=== Диагностика сети ===${NC}"
-                echo "1) Настроить диагностику"
-                echo "2) Восстановить и выйти"
+                echo "1) Настроить диагностику (DHCP/DNS)"
+                echo "2) Восстановить сеть и выйти"
+                echo "3) Выйти, оставив dnsmasq в фоне"
                 read -p "Выберите: " choice
                 ;;
         esac
@@ -332,6 +342,21 @@ network_diagnostic_suite() {
                 ;;
             "2")
                 restore_network
+                DIAG_IN_PROGRESS=false
+                log_info "Модуль завершён. Сеть восстановлена."
+                return 0
+                ;;
+            "3")
+                if [[ -f "$DNSMASQ_PIDFILE" ]] && ps -p "$(cat "$DNSMASQ_PIDFILE" 2>/dev/null)" &>/dev/null; then
+					log_info "Выход без восстановления сети."
+					log_warn "dnsmasq и IP-настройки остаются активными."
+					log_warn "Восстановите сеть вручную при необходимости."
+					log_warn "Чтобы остановить dnsmasq выполни: sudo kill \$(cat /tmp/dnsmasq-diag.pid)"
+					log_warn "Чтобы восстановить сеть: nmcli con up '$NM_ACTIVE_CONNECTION'"
+				else
+					log_info "Выход из модуля."
+				fi
+                DIAG_IN_PROGRESS=false
                 return 0
                 ;;
             *)
