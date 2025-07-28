@@ -130,18 +130,39 @@ show_menu_whiptail() {
 
 # === Вывод текстового меню (fallback) ===
 show_menu_text() {
-    clear
-    echo -e "${PURPLE}╔════════════════════════════════════════════╗${NC}"
-    echo -e "${PURPLE}║${NC}     ${BLUE}Bash Modular Project — Главное меню${NC}     ${PURPLE}║${NC}"
-    echo -e "${PURPLE}╚════════════════════════════════════════════╝${NC}"
-    echo
+	local menu_name=${1:-"Bash Modular Project"}
+	show_menu_header "${menu_name}"
 
     for i in "${!menu_items[@]}"; do
-        echo -e "  ${GREEN}[$i]${NC} ${menu_items[$i]}"
+		show_menu_item $i "${menu_items[$i]}"
     done
-    echo -e "  ${RED}[q]${NC} Выход"
+    show_menu_item
     echo
 }
+
+show_menu_item(){
+	local index=${1:-"q"}
+	local menu_item=${2:-"Выход"}
+	if [[ "$index" == "q" ]]; then
+		echo -e "  ${RED}[$index]${NC} ${menu_item}"
+	else
+		echo -e "  ${GREEN}[$index]${NC} ${menu_item}"
+	fi
+}
+
+show_menu_header() {
+	clear
+	local menu_name=${1:-"Bash Modular Project"}
+	local sequence
+	local len_menu=${#menu_name}
+	local count=$((len_menu+14))
+
+    echo -e "${PURPLE}╔$(printf '═%.0s' $(seq 1 $count))╗${NC}"
+    echo -e "${PURPLE}║${NC}       ${BLUE}${menu_name}${NC}       ${PURPLE}║${NC}"
+    echo -e "${PURPLE}╚$(printf '═%.0s' $(seq 1 $count))╝${NC}"
+    echo
+}
+
 
 # === Печать разделителя ===
 print_menu_footer() {

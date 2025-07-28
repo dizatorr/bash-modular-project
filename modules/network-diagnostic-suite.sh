@@ -314,21 +314,22 @@ network_diagnostic_suite() {
                 choice=$(dialog --clear --title "Сеть" --menu "Действие:" 16 65 6 \
                     "1" "Настроить диагностику (DHCP/DNS)" \
                     "2" "Восстановить сеть и выйти" \
-                    "3" "Выйти, оставив dnsmasq в фоне" \
+                    "q" "Выйти, оставив dnsmasq в фоне" \
                     3>&1 1>&2 2>&3)
                 ;;
             "whiptail")
                 choice=$(whiptail --title "Сеть" --menu "Действие:" 16 65 6 \
                     "1" "Настроить диагностику (DHCP/DNS)" \
                     "2" "Восстановить сеть и выйти" \
-                    "3" "Выйти, оставив dnsmasq в фоне" \
+                    "q" "Выйти, оставив dnsmasq в фоне" \
                     3>&1 1>&2 2>&3)
                 ;;
             *)
-                echo -e "${BLUE}=== Диагностика сети ===${NC}"
-                echo "1) Настроить диагностику (DHCP/DNS)"
-                echo "2) Восстановить сеть и выйти"
-                echo "3) Выйти, оставив dnsmasq в фоне"
+                show_menu_header "Диагностика сети"
+                show_menu_item 1 "Настроить диагностику (DHCP/DNS)"
+                show_menu_item 2 "Восстановить сеть и выйти"
+                show_menu_item
+                echo ""
                 read -p "Выберите: " choice
                 ;;
         esac
@@ -346,7 +347,7 @@ network_diagnostic_suite() {
                 log_info "Модуль завершён. Сеть восстановлена."
                 return 0
                 ;;
-            "3")
+            "q")
                 if [[ -f "$DNSMASQ_PIDFILE" ]] && ps -p "$(cat "$DNSMASQ_PIDFILE" 2>/dev/null)" &>/dev/null; then
 					log_info "Выход без восстановления сети."
 					log_warn "dnsmasq и IP-настройки остаются активными."
