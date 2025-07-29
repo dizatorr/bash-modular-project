@@ -290,7 +290,7 @@ network_diagnostic_suite() {
 
     if [[ $EUID -ne 0 ]]; then
         log_error "Требуются права root"
-        echo -e "${RED}Выполните: sudo ./start.sh${NC}"
+        echo -e "${RED}Выполните: sudo ./Start.sh${NC}"
         return 1
     fi
 
