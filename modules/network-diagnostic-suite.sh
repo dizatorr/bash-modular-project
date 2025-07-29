@@ -14,11 +14,11 @@ source "$SCRIPT_DIR/lib.sh" || {
 }
 
 # === Константы ===
-DNSMASQ_CONFIG="$SCRIPT_DIR/config/diag-dnsmasq.conf"
-DNSMASQ_PIDFILE="/tmp/dnsmasq-diag.pid"
+DNSMASQ_CONFIG="$SCRIPT_DIR/config/diag-dnsmasq.conf" 
+DNSMASQ_PIDFILE="/tmp/dnsmasq-diag.pid" # Путь к pid-файлу dnsmasq
 
 # === Переменные ===
-INTERFACE=""
+INTERFACE="" 
 NM_ACTIVE_CONNECTION=""
 DIAG_IN_PROGRESS=false
 
@@ -46,7 +46,7 @@ check_dependencies() {
 get_listen_ip_from_config() {
 	local config_file="$DNSMASQ_CONFIG"
 
-	if [[ ! -f "$config_file" ]]; then
+	if [[ ! -f "$config_file" ]]; then # Если нет конфига — возвращаем стандартный IP 
 		log_warn "Конфиг не найден: $config_file"
 		echo "192.168.1.1"  # только IP в stdout
 		return
@@ -309,60 +309,53 @@ network_diagnostic_suite() {
 
 	while true; do
 		local choice=""
-		case "$USE_TUI" in
-			"dialog")
-				choice=$(dialog --clear --title "Сеть" --menu "Действие:" 16 65 6 \
-					"1" "Настроить диагностику (DHCP/DNS)" \
-					"2" "Восстановить сеть и выйти" \
-					"q" "Выйти, оставив dnsmasq в фоне" \
-					3>&1 1>&2 2>&3)
-				;;
-			"whiptail")
-				choice=$(whiptail --title "Сеть" --menu "Действие:" 16 65 6 \
-					"1" "Настроить диагностику (DHCP/DNS)" \
-					"2" "Восстановить сеть и выйти" \
-					"q" "Выйти, оставив dnsmasq в фоне" \
-					3>&1 1>&2 2>&3)
-				;;
-			*)
-				show_menu_header "Диагностика сети"
-				show_menu_item 1 "Настроить диагностику (DHCP/DNS)"
-				show_menu_item 2 "Восстановить сеть и выйти"
-				show_menu_item
-				echo ""
-				read -p "Выберите: " choice
-				;;
-		esac
+		local menu_items=("Настроить диагностику (DHCP/DNS)" "Восстановить сеть и выйти" "Выйти, оставив dnsmasq в фоне")
+    	local MENU_TITLE="Диагностика сети (Полный пакет)" 
 
-		case "$choice" in
-			"1")
-				read -p "Введите IP/маску (Enter = автоиз конфига): " user_ip
-				setup_static_ip "$user_ip" || continue
-				start_dnsmasq || continue
-				scan_network "$user_ip"
-				;;
-			"2")
-				restore_network
-				DIAG_IN_PROGRESS=false
-				log_info "Модуль завершён. Сеть восстановлена."
-				return 0
-				;;
-			"q")
-				if [[ -f "$DNSMASQ_PIDFILE" ]] && ps -p "$(cat "$DNSMASQ_PIDFILE" 2>/dev/null)" &>/dev/null; then
-					log_info "Выход без восстановления сети."
-					log_warn "dnsmasq и IP-настройки остаются активными."
-					log_warn "Восстановите сеть вручную при необходимости."
-					log_warn "Чтобы остановить dnsmasq выполни: sudo kill \$(cat /tmp/dnsmasq-diag.pid)"
-					log_warn "Чтобы восстановить сеть: nmcli con up '$NM_ACTIVE_CONNECTION'"
-				else
-					log_info "Выход из модуля."
-				fi
-				DIAG_IN_PROGRESS=false
-				return 0
-				;;
-			*)
-				log_warn "Неверный выбор"
-				;;
-		esac
+		while true; do
+			selected=$(show_submenu "${menu_items[@]}" "$MENU_TITLE")
+			[[ "$selected" == "q" ]] && return 0
+
+			case "$selected" in
+				"0")
+					read -p "Введите IP/маску (Enter = автоиз конфига): " user_ip
+					setup_static_ip "$user_ip" || continue
+					start_dnsmasq || continue
+					scan_network "$user_ip"
+					;;
+				"1")
+					restore_network
+					DIAG_IN_PROGRESS=false
+					log_info "Модуль завершён. Сеть восстановлена."
+					return 0
+					;;
+				"2")
+					if [[ -f "$DNSMASQ_PIDFILE" ]] && ps -p "$(cat "$DNSMASQ_PIDFILE" 2>/dev/null)" &>/dev/null; then
+						log_info "Выход без восстановления сети."
+						log_warn "dnsmasq и IP-настройки остаются активными."
+						log_warn "Восстановите сеть вручную при необходимости."
+						log_warn "Чтобы остановить dnsmasq выполни: sudo kill \$(cat /tmp/dnsmasq-diag.pid)"
+						log_warn "Чтобы восстановить сеть: nmcli con up '$NM_ACTIVE_CONNECTION'"
+					else
+						log_info "Выход из модуля."
+					fi
+					DIAG_IN_PROGRESS=false
+					return 0
+					;;
+				*) log_error "Неизвестный выбор: $selected" ;;
+			esac
+
+			read -n1 -r -s -p "Нажмите любую клавишу для возврата в меню..."
+		done
 	done
+}
+
+# Вспомогательная функция для вызова show_menu из lib.sh
+# show_submenu нужна для удобного и чистого вызова show_menu из библиотеки, 
+# когда требуется передать пункты меню и заголовок.
+show_submenu() {
+    local menu_items=("${@:1:$#-1}")
+    local title="${!#}"
+    export menu_items MENU_TITLE
+    show_menu
 }
