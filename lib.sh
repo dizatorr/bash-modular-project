@@ -15,36 +15,36 @@ LOCKFILE="${LOCKFILE:-/tmp/bash-modular-project.lock}"
 LOG_DIR="$SCRIPT_DIR/logs"
 
 # === Инициализация ===
-initialize() {
-    # Проверка наличия конфига
-    if [[ ! -f "$CONFIG_FILE" ]]; then
-        echo -e "${RED}FATAL: Конфигурационный файл не найден: $CONFIG_FILE${NC}" >&2
-        exit 1
-    fi
-    source "$CONFIG_FILE" || {
-        echo -e "${RED}FATAL: Ошибка загрузки конфигурации${NC}" >&2
-        exit 1
-    }
 
-    # Проверка уровня логирования
-    if [[ -z "$LOG_LEVEL" ]] || [[ -z "${LOG_LEVELS[$LOG_LEVEL]}" ]]; then
-        LOG_LEVEL="INFO"
-    fi
-
-    # Создание директории логов
-    mkdir -p "$LOG_DIR" || {
-        echo -e "${RED}FATAL: Не удалось создать директорию логов: $LOG_DIR${NC}" >&2
-        exit 1
-    }
-
-    # Инициализация уровней логирования
-    declare -A LOG_LEVELS=( [DEBUG]=0 [INFO]=1 [WARN]=2 [ERROR]=3 )
-
-    # Установка обработчиков сигналов
-    trap 'trap_handler SIGINT'  SIGINT
-    trap 'trap_handler SIGTERM' SIGTERM
-    trap 'trap_handler EXIT'    EXIT
+# Проверка наличия конфига
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo -e "${RED}FATAL: Конфигурационный файл не найден: $CONFIG_FILE${NC}" >&2
+    exit 1
+fi
+source "$CONFIG_FILE" || {
+    echo -e "${RED}FATAL: Ошибка загрузки конфигурации${NC}" >&2
+    exit 1
 }
+
+# Проверка уровня логирования
+if [[ -z "$LOG_LEVEL" ]] || [[ -z "${LOG_LEVELS[$LOG_LEVEL]}" ]]; then
+    LOG_LEVEL="INFO"
+fi
+
+# Создание директории логов
+mkdir -p "$LOG_DIR" || {
+    echo -e "${RED}FATAL: Не удалось создать директорию логов: $LOG_DIR${NC}" >&2
+    exit 1
+}
+
+# Инициализация уровней логирования
+declare -A LOG_LEVELS=( [DEBUG]=0 [INFO]=1 [WARN]=2 [ERROR]=3 )
+
+# Установка обработчиков сигналов
+trap 'trap_handler SIGINT'  SIGINT
+trap 'trap_handler SIGTERM' SIGTERM
+trap 'trap_handler EXIT'    EXIT
+
 
 # === Логирование ===
 log() {
@@ -162,5 +162,3 @@ show_menu() {
     echo "${selected:-q}"
 }
 
-# === Основной скрипт ===
-initialize
