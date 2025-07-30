@@ -15,6 +15,7 @@ PURPLE='\033[0;35m'
 # === Конфигурация ===
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 CONFIG_FILE="$SCRIPT_DIR/config/settings.conf"
+LOCAL_CONFIG_FILE="$SCRIPT_DIR/config/local.conf"
 LOCKFILE="${LOCKFILE:-/tmp/bash-modular-project.lock}"
 LOG_DIR="$SCRIPT_DIR/logs"
 
@@ -72,6 +73,14 @@ log_debug() { log "DEBUG" "$*"; }
 log_info()  { log "INFO"  "$*"; }
 log_warn()  { log "WARN"  "$*"; }
 log_error() { log "ERROR" "$*"; }
+
+# Проверка наличия локального конфига
+if [[ ! -f "$LOCAL_CONFIG_FILE" ]]; then
+    log_error "Локалтный конфигурационный файл не найден: $LOCAL_CONFIG_FILE" >&2
+fi
+source "$LOCAL_CONFIG_FILE" || {
+    log_error "Ошибка загрузки лоакльной конфигурации" >&2
+}
 
 # === Управление блокировками ===
 acquire_lock() {

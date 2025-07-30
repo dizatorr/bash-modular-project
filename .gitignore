@@ -29,5 +29,8 @@ secrets.sh
 !config/settings.conf
 !modules/*.sh
 
+# Секретные файлы
+_*.sh
+
 # === Артефакты GitHub ===
 .github/workflows/test.sh
