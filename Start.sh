@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Автор: Diz A Torr
+# Версия: 1.0
+# Лицензия: MIT
+# Описание: Главный скрипт проекта
+
 
 # === Настройки ===
 MENU_TITLE="${MENU_TITLE:-Главное меню}"
@@ -44,7 +49,7 @@ done
 # === Основной цикл ===
 main() {
     while true; do
-        show_menu
+        show_menu "$MENU_TITLE" "${menu_items[@]}"
         [[ "$selected" == "q" ]] && break
 
         # Проверка ввода

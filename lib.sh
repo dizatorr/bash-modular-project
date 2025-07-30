@@ -1,4 +1,8 @@
 # lib.sh — общие функции и универсальное меню
+# Автор: Diz A Torr
+# Версия: 1.0
+# Лицензия: MIT
+# Описание: Библиотека с общими функциями и универсальным меню
 
 # === Цвета ===
 NC='\033[0m'
@@ -128,6 +132,8 @@ show_menu_header() {
 }
 
 show_menu() {
+    local menu_title=${1:-$MENU_TITLE}  # Заголовок меню
+    local menu_items=("${@:2}") # Массив с пунктами меню
     local choices=()
     local i=0
 
@@ -143,13 +149,13 @@ show_menu() {
 
     case "$USE_TUI" in
         "dialog")
-            selected=$(dialog --clear --no-cancel --title "$MENU_TITLE" --menu "Выберите действие:" 15 60 5 "${choices[@]}" 2>&1 >/dev/tty)
+            selected=$(dialog --clear --no-cancel --title "$menu_title" --menu "Выберите действие:" 15 60 5 "${choices[@]}" 2>&1 >/dev/tty)
             ;;
         "whiptail")
-            selected=$(whiptail --title "$MENU_TITLE" --menu "Выберите действие:" 15 60 5 "${choices[@]}" 3>&1 1>&2 2>&3)
+            selected=$(whiptail --title "$menu_title" --menu "Выберите действие:" 15 60 5 "${choices[@]}" 3>&1 1>&2 2>&3)
             ;;
         "text")
-            show_menu_header "$MENU_TITLE"
+            show_menu_header "$menu_title"
             for i in "${!menu_items[@]}"; do
                 show_menu_item "$i" "${menu_items[$i]%%|*}"
             done
