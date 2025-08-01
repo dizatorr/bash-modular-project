@@ -79,7 +79,7 @@ smb_unmount_resource_menu() {
                 mount_point_to_unmount="${mount_points[selected]}"
             elif (( selected == ${#display_items[@]} - 1 )); then
                 # Выбран ручной ввод
-                read -p "Введите точку монтирования: " mount_point_to_unmount
+                read -r -p "Введите точку монтирования: " mount_point_to_unmount
                 if [[ -z "$mount_point_to_unmount" ]]; then
                     log_warn "Точка монтирования не указана"
                     return 1
@@ -122,7 +122,7 @@ smb_unmount_resource_menu() {
         echo -e "${YELLOW}Попробовать принудительное отмонтирование?${NC}"
         
         local force_choice
-        read -p "Принудительное отмонтирование (y/N): " force_choice
+        read -r -p "Принудительное отмонтирование (y/N): " force_choice
         
         if [[ "$force_choice" =~ ^[Yy]$ ]]; then
             echo -e "${YELLOW}Попытка принудительного отмонтирования...${NC}"

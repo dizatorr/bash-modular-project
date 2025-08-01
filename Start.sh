@@ -6,7 +6,8 @@
 
 # === Настройки ===
 MENU_TITLE="${MENU_TITLE:-Главное меню}"
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+readonly SCRIPT_DIR
 readonly LIB_DIR="$SCRIPT_DIR" # Предполагается, что lib.sh и module_loader.sh в той же директории
 
 # === Загрузка библиотек ===
@@ -36,7 +37,8 @@ main() {
         show_menu "$MENU_TITLE" "${MENU_ITEMS[@]}"
         
         # Обработка выбора пользователя
-        case "$selected" in
+        # Если selected не установлена или пуста, Bash выведет сообщение об ошибке и завершит
+        case "${selected:?}" in 
             q|Q)
                 break
                 ;;

@@ -29,7 +29,7 @@ EOF
     fi
 
     # Выбираем редактор
-    local editors=("nano" "vim" "vi" "gedit")
+    local editors=("nano" "vim" "vi" "gedit") # Доступные редакторы по умолчанию
     local editor=""
     local ed
     for ed in "${editors[@]}"; do
