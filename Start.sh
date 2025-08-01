@@ -4,79 +4,57 @@
 # Лицензия: MIT
 # Описание: Главный скрипт проекта
 
-
 # === Настройки ===
 MENU_TITLE="${MENU_TITLE:-Главное меню}"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-MODULE_DIR="$SCRIPT_DIR/modules"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+readonly LIB_DIR="$SCRIPT_DIR" # Предполагается, что lib.sh и module_loader.sh в той же директории
 
-# === Загрузка библиотеки ===
-source "$SCRIPT_DIR/lib.sh" || {
-    echo "FATAL: Не удалось загрузить lib.sh" >&2
+# === Загрузка библиотек ===
+# Загружаем основную библиотеку
+source "$LIB_DIR/lib.sh" || {
+    log_error "FATAL: Не удалось загрузить lib.sh"
     exit 1
 }
 
-# === Проверка модулей ===
-[[ ! -d "$MODULE_DIR" ]] && {
-    log_error "Папка модулей не найдена: $MODULE_DIR"
-    exit 1
-}
-
-# === Сбор модулей ===
-scripts=()
-menu_items=()
-function_names=()
-
-for file in "$MODULE_DIR"/*.sh; do
-    [[ -f "$file" ]] || continue
-
-    menu=$(grep '^# === MENU:' "$file" | head -n1 | cut -d':' -f2- | xargs)
-    func=$(grep '^# === FUNC:' "$file" | head -n1 | cut -d':' -f2- | xargs)
-
-    [[ -n "$menu" && -n "$func" ]] && {
-        scripts+=("$file")
-        menu_items+=("$menu")
-        function_names+=("$func")
-    }
-done
-
-[[ ${#scripts[@]} -eq 0 ]] && {
-    log_error "Нет доступных модулей в '$MODULE_DIR'."
-    echo "Пожалуйста, добавьте .sh-модули в папку modules/."
+# Загружаем универсальную функцию загрузки модулей
+source "$LIB_DIR/module_loader.sh" || {
+    log_error "Не удалось загрузить module_loader.sh"
     exit 1
 }
 
 # === Основной цикл ===
 main() {
+    local module_dir="$SCRIPT_DIR/modules"
+    # Загружаем все модули из директории
+    if ! load_modules "$module_dir"; then
+        log_error "Не удалось загрузить модули"
+        exit 1
+    fi
+    #sleep 10
+    # Основной цикл меню
     while true; do
-        show_menu "$MENU_TITLE" "${menu_items[@]}"
-        [[ "$selected" == "q" ]] && break
-
-        # Проверка ввода
-        if ! [[ "$selected" =~ ^[0-9]+$ ]] || (( selected >= ${#scripts[@]} )); then
-            log_warn "Некорректный выбор: '$selected'"
-            echo -e "${RED}Ошибка: введите корректный номер.${NC}"
-            read -n1 -r -s -p "Нажмите любую клавишу..."
-            continue
-        fi
-
-        local script_path="${scripts[$selected]}"
-        local func_name="${function_names[$selected]}"
-
-        log_info "Запуск: $script_path [$func_name]"
-
-        # Загрузка и выполнение модуля
-        { [[ -f "$script_path" && -r "$script_path" ]] && source "$script_path"; } || {
-            log_error "Не удалось загрузить: $script_path"
-            read -n1 -r -s -p "Нажмите любую клавишу..."
-            continue
-        }
-
-        if declare -f "$func_name" > /dev/null; then
-            "$func_name" && log_info "Успешно: $func_name" || log_error "Ошибка: $func_name"
-        else
-            log_error "Функция не найдена: $func_name"
-        fi
+        show_menu "$MENU_TITLE" "${MENU_ITEMS[@]}"
+        
+        # Обработка выбора пользователя
+        case "$selected" in
+            q|Q)
+                break
+                ;;
+            [0-9]*)
+                # Проверка ввода
+                if (( selected >= 0 )) && (( selected < ${#MENU_ITEMS[@]} )) && (( selected < ${#FUNCTIONS[@]} )); then
+                    # Вызываем функцию модуля
+                    if ! call_module_function "$selected"; then
+                        log_error "Ошибка при выполнении модуля '$selected'"
+                    fi
+                else
+                    log_error "Некорректный выбор: '$selected'"
+                fi
+                ;;
+            *)
+                log_error "Некорректный ввод: '$selected'"
+                ;;
+        esac
 
         echo
         read -n1 -r -s -p "Нажмите любую клавишу для возврата в меню..."
