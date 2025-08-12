@@ -55,6 +55,7 @@ load_modules() {
         # Проверяем, что оба параметра извлечены
         if [[ -n "$menu_item" && -n "$func_name" ]]; then
             # Подключаем файл
+            # shellcheck source=/dev/null
             if source "$file"; then
                 # Добавляем в глобальные массивы
                 SCRIPTS+=("$file")

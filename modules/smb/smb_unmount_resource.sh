@@ -49,7 +49,8 @@ smb_unmount_resource_menu() {
                 display_items+=("Точка: $mount_point")
             else
                 # Последний резерв
-                local mount_point=$(echo "$line" | awk '{print $3}')
+                local mount_point
+                mount_point=$(echo "$line" | awk '{print $3}')
                 mount_points+=("$mount_point")
                 display_items+=("Точка: $mount_point")
             fi

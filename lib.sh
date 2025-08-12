@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 # ==============================================================================
 # lib.sh — общие функции и универсальное меню
 # Автор: Diz A Torr
@@ -24,16 +25,51 @@ readonly CONFIG_FILE="$SCRIPT_DIR/config/settings.conf"
 readonly LOCAL_CONFIG_FILE="$SCRIPT_DIR/config/local.conf"
 readonly LOCKFILE="${LOCKFILE:-/tmp/bash-modular-project.lock}"
 readonly LOG_DIR="$SCRIPT_DIR/logs"
+readonly DNSMASQ_CONF="$SCRIPT_DIR/config/diag-dnsmasq.conf"
 
-# Проверка наличия конфига
-if [[ ! -f "$CONFIG_FILE" ]]; then
-    echo -e "${RED}FATAL: Конфигурационный файл не найден: $CONFIG_FILE${NC}" >&2
-    exit 1
-fi
-source "$CONFIG_FILE" || {
-    echo -e "${RED}FATAL: Ошибка загрузки конфигурации${NC}" >&2
-    exit 1
+# Проверка наличия конфига (файла)
+# $1 - путь к файлу конфигурации
+# $2 - флаг обязательности файла (true/false)
+# $3 - флаг загрузки файла (true/false)
+load_config() {
+    local config_file="$1"
+    local required="${2:-true}"
+    local load_file="${3:-true}"
+    local mesage=""
+    
+    if [[ ! -f "$config_file" ]]; then
+        if [[ "$required" == "true" ]]; then
+            log_error "Конфигурационный файл не найден: $config_file"
+            exit 1
+        else
+            log_warn "Опциональный конфигурационный файл не найден: $config_file"
+            return 1
+        fi
+    fi
+    
+    if [[ ! -r "$config_file" ]]; then
+        log_error "Нет прав на чтение файла: $config_file"
+        exit 1
+    fi
+    
+    if [[ "$load_file" == "true" ]]; then
+        # shellcheck disable=SC1090
+        if ! source "$config_file"; then
+            log_error "Ошибка загрузки конфигурационного файла: $config_file"
+            exit 1
+        fi
+        log_info "Загружен конфигурационный файл: $config_file"
+    else
+        log_info "Проверен конфигурационный файл: $config_file"
+    fi
+    
+    return 0
 }
+
+load_config "$CONFIG_FILE"
+load_config "$LOCAL_CONFIG_FILE" false  # Опциональный файл
+load_config "$DNSMASQ_CONF" false false 
+
 
 # Проверка уровня логирования
 if [[ -z "$LOG_LEVEL" ]] || [[ -z "${LOG_LEVELS[$LOG_LEVEL]}" ]]; then
@@ -42,7 +78,7 @@ fi
 
 # Создание директории логов
 mkdir -p "$LOG_DIR" || {
-    echo -e "${RED}FATAL: Не удалось создать директорию логов: $LOG_DIR${NC}" >&2
+    log_error "Не удалось создать директорию логов: $LOG_DIR"
     exit 1
 }
 
@@ -71,8 +107,17 @@ log() {
         "DEBUG") color="$BLUE" ;;
     esac
 
-    echo -e "${color}[$level] $(date '+%Y-%m-%d %H:%M:%S') — $msg${NC}" >&2
-    echo "[$level] $(date '+%Y-%m-%d %H:%M:%S') — $msg" >> "$LOG_DIR/$(date '+%Y-%m-%d').log"
+    local timestamp
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    
+    # Вывод в stderr с цветами
+    echo -e "${color}[$level] $timestamp — $msg$NC" >&2
+    
+    # Запись в лог-файл без цветов
+    printf "[%s] %s — %s\n" \
+        "$level" \
+        "$timestamp" \
+        "$msg" >> "$LOG_DIR/$(date '+%Y-%m-%d').log"
 }
 
 log_debug() { log "DEBUG" "$*"; }
@@ -80,13 +125,6 @@ log_info()  { log "INFO"  "$*"; }
 log_warn()  { log "WARN"  "$*"; }
 log_error() { log "ERROR" "$*"; }
 
-# Проверка наличия локального конфига
-if [[ ! -f "$LOCAL_CONFIG_FILE" ]]; then
-    log_error "Локалтный конфигурационный файл не найден: $LOCAL_CONFIG_FILE" >&2
-fi
-source "$LOCAL_CONFIG_FILE" || {
-    log_error "Ошибка загрузки лоакльной конфигурации" >&2
-}
 
 # ------------------------------------------------------------------------------
 # Управление блокировками
