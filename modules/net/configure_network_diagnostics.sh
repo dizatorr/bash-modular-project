@@ -7,8 +7,8 @@
 # Описание: Настройка конфигурационного файла для сетевой диагностики
 
 configure_network_diagnostics() {
-    local config_file="$1"
-    
+    local config_file="${1:-$DNSMASQ_CONF}"
+
     clear
     echo -e "${BLUE}=== Настройка параметров диагностики ===${NC}"
     echo -e "${YELLOW}Редактирование файла: $config_file${NC}"

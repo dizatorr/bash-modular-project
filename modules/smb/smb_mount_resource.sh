@@ -18,7 +18,9 @@ smb_mount_resource() {
     show_menu_header "Монтирование SMB ресурса"
 
     # Загружаем список ресурсов
+    # shellcheck disable=SC2207
     local shares_data=($(load_smb_resources "$config_file"))
+    # shellcheck disable=SC2207
     local display_names=($(get_display_names "${shares_data[@]}"))
 
     if [[ ${#display_names[@]} -eq 0 ]]; then
@@ -56,15 +58,15 @@ smb_mount_resource() {
 
     # Если домен не указан в конфиге, спрашиваем у пользователя
     if [[ -z "$domain" && -n "$username" ]]; then
-        read -p "Домен (например, domain.local, оставьте пустым если не нужен): " domain
+        read -r -p "Домен (например, domain.local, оставьте пустым если не нужен): " domain
     fi
 
     local mount_point
-    read -p "Точка монтирования (пусто для временной): " mount_point
+    read -r -p "Точка монтирования (пусто для временной): " mount_point
 
     if [[ -z "$mount_point" ]]; then
         mount_point=$(mktemp -d)
-        echo -e "${YELLOW}Создана временная точка монтирования: $mount_point${NC}"
+        log_info "Создана временная точка монтирования: $mount_point"
     fi
 
     # Создаем точку монтирования если не существует

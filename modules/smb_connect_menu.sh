@@ -45,6 +45,7 @@ smb_connect_menu() {
                 # Проверяем, что индекс в допустимом диапазоне
                 if (( selected < ${#MENU_ITEMS[@]} )) && (( selected < ${#FUNCTIONS[@]} )); then
                     # Вызываем функцию модуля
+                    log_debug "Выбран модуль $selected"
                     call_module_function "$selected" "$DEFAULT_CONFIG_FILE"
                 else
                     log_error "Некорректный выбор"

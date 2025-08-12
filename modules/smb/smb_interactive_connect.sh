@@ -6,6 +6,57 @@
 # Лицензия: MIT
 # Описание: Интерактивное подключение к SMB ресурсу через smbclient
 
+# --- Вспомогательные функции ---
+# Получает имя пользователя с учетом дефолтного значения
+get_smb_username() {
+    local username
+    if [[ -n "$SMB_DEFAULT_USER" ]]; then
+        echo "$SMB_DEFAULT_USER"
+    else
+        read -p "Имя пользователя [domen\\name или name@domen] (оставьте пустым для гостевого доступа): " username
+        echo "$username"
+    fi
+}
+
+# Загружает ресурсы из конфигурационного файла
+load_smb_resources() {
+    local config_file="$1"
+    local resources=()
+    
+    # Проверяем существование файла
+    [[ -f "$config_file" ]] || return 0
+    
+    # Читаем файл построчно
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Пропускаем комментарии и пустые строки
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${line//[[:space:]]/}" ]] && continue
+        
+        # Проверяем формат: сервер|ресурс|отображаемое_имя|опции
+        [[ "$line" == *'|'* ]] && resources+=("$line")
+    done < "$config_file"
+    
+    # Возвращаем массив ресурсов
+    echo "${resources[@]}"
+}
+
+# Извлекает отображаемые имена из данных ресурсов
+get_display_names() {
+    local resources=("$@")
+    local names=()
+    local display_name
+
+    # Проходим по всем ресурсам и извлекаем отображаемые имена
+    for resource in "${resources[@]}"; do
+        IFS='|' read -r _ _ display_name _ <<< "$resource"
+        [[ -n "$display_name" ]] && names+=("$display_name")
+    done
+    
+    # Возвращаем массив отображаемых имен
+    echo "${names[@]}"
+}
+
+
 smb_interactive_connect() {
     local config_file="$1"
     local server share username

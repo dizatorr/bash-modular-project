@@ -8,34 +8,10 @@
 
 setup_dhcp_server() {
     local config_file="${1:-$DNSMASQ_CONF}"
-    
-    # Проверка существования конфига
-    if ! load_config "$config_file" true false ; then
-        echo -e "${RED}Создайте файл: $config_file${NC}"
-        return 1
-    fi
+    local interface="${2:-$(select_network_interface "$config_file")}"
     
     log_debug "Чтение конфига: $config_file"
-    
-    
-    # Получаем интерфейс из конфига
-    local interface
-    interface=$(grep -E "^[[:space:]]*interface=" "$config_file" | head -n1 | cut -d'=' -f2 | xargs)
-    
-    if [[ -z "$interface" ]]; then
-        log_error "Интерфейс не найден в конфиге: $config_file"
-        echo -e "${RED}Добавьте строку: interface=имя_интерфейса${NC}"
-        return 1
-    fi
-    
-    log_debug "Найден интерфейс в конфиге: $interface"
-    
-    # Проверка существования интерфейса
-    if ! ip link show "$interface" &>/dev/null; then
-        log_error "Интерфейс $interface не найден в системе"
-        return 1
-    fi
-    
+
     # Получаем IP из конфига
     local listen_ip
     # Ищем listen-address
@@ -58,14 +34,24 @@ setup_dhcp_server() {
     read -p "Введите IP/маску (Enter = $listen_ip/24): " ip_cidr
     ip_cidr="${ip_cidr:-$listen_ip/24}"
 
+    # Валидация введенного IP/маски
+    if ! validate_ip_cidr "$ip_cidr"; then
+        log_error "Некорректный формат IP/маски: $ip_cidr"
+        return 1
+    fi
+
     # Настраиваем статический IP
     # Отключаем управление от NetworkManager
-    if ! nmcli dev set "$interface" managed no 2>/dev/null; then
-        log_warn "Не удалось отключить управление NetworkManager для $interface"
+    if command -v nmcli &>/dev/null; then
+        if ! nmcli dev set "$interface" managed no 2>/dev/null; then
+            log_warn "Не удалось отключить управление NetworkManager для $interface"
+        fi
+    else
+        log_debug "NetworkManager не найден, пропускаем отключение"
     fi
 
     # Очищаем и поднимаем интерфейс
-    ip addr flush dev "$interface" scope global
+    ip addr flush dev "$interface" scope global 2>/dev/null || true
     ip link set "$interface" up
 
     # Назначаем IP
@@ -77,7 +63,9 @@ setup_dhcp_server() {
     log_info "Назначен IP: $ip_cidr на интерфейсе $interface"
 
     # Проверяем, занят ли порт 53
-    check_and_kill_port_53
+    if ! check_and_kill_port_53; then
+        log_warn "Не удалось освободить порт 53. Запуск dnsmasq может завершиться ошибкой."
+    fi
 
     # Запускаем dnsmasq
     local dnsmasq_pidfile="/tmp/dnsmasq-diag.pid"
@@ -88,9 +76,9 @@ setup_dhcp_server() {
     if [[ -f "$dnsmasq_pidfile" ]]; then
         local old_pid
         old_pid=$(cat "$dnsmasq_pidfile" 2>/dev/null)
-        if [[ -n "$old_pid" ]] && kill -0 "$old_pid" 2>/dev/null; then
+        if [[ -n "$old_pid" ]] && [[ "$old_pid" =~ ^[0-9]+$ ]] && kill -0 "$old_pid" 2>/dev/null; then
             log_warn "Останавливаем старый dnsmasq (PID: $old_pid)"
-            kill "$old_pid" || true
+            kill "$old_pid" 2>/dev/null || true
         fi
         rm -f "$dnsmasq_pidfile"
     fi
@@ -108,34 +96,101 @@ setup_dhcp_server() {
 
 # Функция для проверки и освобождения порта 53
 check_and_kill_port_53() {
-    # Проверяем, кто занимает порт 53
-    local port_users
-    systemctl stop systemd-resolved    # Отключаем systemd-resolved
-    systemctl disable systemd-resolved # Отключаем автозапуск systemd-resolved
-
-    port_users=$(netstat -tulnp 2>/dev/null | grep ":53 " | awk '{print $7}' | cut -d'/' -f1 | sort -u)
+    local max_attempts=3
+    local attempt=0
     
-    if [[ -n "$port_users" ]]; then
+    while [[ $attempt -lt $max_attempts ]]; do
+        # Останавливаем systemd-resolved если он есть
+        if systemctl is-active systemd-resolved &>/dev/null; then
+            log_info "Останавливаем systemd-resolved..."
+            sudo systemctl stop systemd-resolved 2>/dev/null || true
+        fi
+
+        # Проверяем, кто занимает порт 53
+        local port_users
+        port_users=$(sudo netstat -tulnp 2>/dev/null | grep ":53 " | awk '{print $7}' | cut -d'/' -f1,2 | sort -u)
+
+        if [[ -z "$port_users" ]]; then
+            log_debug "Порт 53 свободен"
+            return 0
+        fi
+
         log_warn "Порт 53 занят процессами: $port_users"
         
-        # Спрашиваем пользователя, убивать ли процессы
-        local answer
-        read -p "Остановить процессы, использующие порт 53? (y/N): " answer
-        if [[ "${answer,,}" =~ ^(y|yes)$ ]]; then
-
-            for pid in $port_users; do
-                if [[ "$pid" =~ ^[0-9]+$ ]] && kill -0 "$pid" 2>/dev/null; then
-                    log_info "Останавливаем процесс PID: $pid"
-                    kill "$pid" || log_error "Не удалось остановить процесс $pid"
-                fi
-            done
-            
-            # Ждем немного, пока процессы остановятся
-            sleep 2
-        else
-            log_info "Порт 53 останется занятым. Запуск dnsmasq может завершиться ошибкой."
+        # Автоматически останавливаем известные конфликтующие сервисы
+        local stopped_something=false
+        
+        # Проверяем systemd-resolved
+        if echo "$port_users" | grep -q "systemd-resolve"; then
+            log_info "Отключение systemd-resolved..."
+            sudo systemctl stop systemd-resolved 2>/dev/null || true
+            sudo systemctl disable systemd-resolved 2>/dev/null || true
+            stopped_something=true
         fi
+
+        # Если остались другие процессы - спрашиваем пользователя
+        local remaining_users
+        remaining_users=$(echo "$port_users" | grep -v "systemd-resolve" | grep -v "^$")
+        
+        if [[ -n "$remaining_users" ]]; then
+            local answer
+            echo "Оставшиеся процессы, использующие порт 53: $remaining_users"
+            read -p "Остановить эти процессы? (y/N): " answer
+            if [[ "${answer,,}" =~ ^(y|yes)$ ]]; then
+                for process in $remaining_users; do
+                    local pid
+                    pid=$(echo "$process" | cut -d'/' -f1)
+                    if [[ "$pid" =~ ^[0-9]+$ ]] && kill -0 "$pid" 2>/dev/null; then
+                        log_info "Останавливаем процесс PID: $pid"
+                        sudo kill "$pid" 2>/dev/null || log_error "Не удалось остановить процесс $pid"
+                    fi
+                done
+            else
+                log_info "Порт 53 останется занятым."
+                break
+            fi
+        elif [[ "$stopped_something" == true ]]; then
+            # Если мы остановили только systemd-resolved, пробуем еще раз
+            ((attempt++))
+            sleep 1
+            continue
+        fi
+
+        ((attempt++))
+        sleep 1
+    done
+
+    # Финальная проверка
+    if sudo netstat -tulnp 2>/dev/null | grep -q ":53 "; then
+        log_error "Порт 53 все еще занят"
+        return 1
     else
-        log_debug "Порт 53 свободен"
+        log_info "Порт 53 успешно освобожден"
+        return 0
+    fi
+}
+
+# Вспомогательная функция для валидации IP/маски
+validate_ip_cidr() {
+    local ip_cidr="$1"
+    local ip mask
+    
+    if [[ "$ip_cidr" =~ ^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/([0-9]+)$ ]]; then
+        ip="${BASH_REMATCH[1]}"
+        mask="${BASH_REMATCH[2]}"
+        
+        # Проверка IP
+        if ! [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            return 1
+        fi
+        
+        # Проверка маски (0-32)
+        if [[ ! "$mask" =~ ^[0-9]+$ ]] || (( mask < 0 )) || (( mask > 32 )); then
+            return 1
+        fi
+        
+        return 0
+    else
+        return 1
     fi
 }

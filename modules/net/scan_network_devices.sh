@@ -7,32 +7,10 @@
 # Описание: Сканирование устройств в сети и создание отчета
 
 scan_network_devices() {
-    local config_file="$DNSMASQ_CONF"
-    # Проверка существования конфига
-    if ! load_config "$config_file" true false ; then
-        echo -e "${RED}Создайте файл: $config_file${NC}"
-        return 1
-    fi
-    
+    local config_file="${1:-$DNSMASQ_CONF}"
+    local interface="${2:-$(select_network_interface "$config_file")}"
+
     log_debug "Чтение конфига: $config_file"
-    
-    # Получаем интерфейс из конфига
-    local interface
-    interface=$(grep -E "^[[:space:]]*interface=" "$config_file" | head -n1 | cut -d'=' -f2 | xargs)
-    
-    if [[ -z "$interface" ]]; then
-        log_error "Интерфейс не найден в конфиге: $config_file"
-        echo -e "${RED}Добавьте строку: interface=имя_интерфейса${NC}"
-        return 1
-    fi
-    
-    log_debug "Найден интерфейс в конфиге: $interface"
-    
-    # Проверка существования интерфейса
-    if ! ip link show "$interface" &>/dev/null; then
-        log_error "Интерфейс $interface не найден в системе"
-        return 1
-    fi
     
     # Получаем IP из конфига
     local ip_cidr
@@ -41,6 +19,7 @@ scan_network_devices() {
 
     # Если не найдено — ищем шлюз (dhcp-option=3,)
     if [[ -z "$ip_cidr" ]]; then
+        log_warn "Не удалось определить IP из конфига.ищем шлюз (dhcp-option=3,)"
         ip_cidr=$(grep -E "^[[:space:]]*dhcp-option=3," "$config_file" | head -n1 | cut -d',' -f2 | xargs)
     fi
 
@@ -49,10 +28,10 @@ scan_network_devices() {
         log_warn "Не удалось определить IP из конфига. Используется 192.168.1.1"
         ip_cidr="192.168.1.1"
     else
-        log_debug "Найден IP в конфиге: $listen_ip"
+        log_debug "Найден IP в конфиге: ${ip_cidr}"
     fi
 
-    log_debug "Сканируем сеть... интерфейс: $interface, IP: $ip_cidr"
+    log_debug "Сканируем сеть... интерфейс: $interface, IP: ${ip_cidr}"
     local listen_ip
     listen_ip=$(echo "$ip_cidr" | cut -d/ -f1)
     local subnet
