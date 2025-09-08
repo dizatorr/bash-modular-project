@@ -1,0 +1,126 @@
+авг 25 16:59:59 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[26529]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x56222d716e90> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 25 18:58:12 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 25 18:58:12 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 25 18:58:12 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 25 18:59:13 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 25 23:37:49 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 25 23:37:49 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 25 23:37:49 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 25 23:38:50 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 01:57:38 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 01:57:38 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 01:57:38 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 26 01:58:39 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 03:42:29 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 03:42:29 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 03:42:30 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 26 03:43:30 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 04:17:26 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 04:17:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 04:17:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 26 04:18:28 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 04:52:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 04:52:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 04:52:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 26 04:53:25 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 05:27:21 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 05:27:21 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 05:27:21 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 26 05:28:22 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 06:02:18 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 06:02:18 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 06:02:18 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 06:37:15 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 06:37:15 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 06:37:15 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local\IPC$ smb2_get_dfs_refer: ioctl [0;1;39merror[0;1;31m: rc=-35[0m
+авг 26 06:38:16 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 07:12:12 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: [0;1;31mCIFS: VFS: \\DC4.teconpc.local Send [0;1;39merror[0;1;31m in SessSetup = -11[0m
+авг 26 08:00:16 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[2718]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x5a84a1499d90> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 08:25:49 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC xdg-desktop-por[3383]: [0;1;38;5;185mCaught PipeWire [0;1;39merror[0;1;38;5;185m: connection error[0m
+авг 26 08:25:49 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[41742]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x58fedc19eeb0> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 08:25:49 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[41742]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x58fedc19eeb0> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 08:27:41 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC xdg-desktop-por[3383]: [0;1;38;5;185mCaught PipeWire [0;1;39merror[0;1;38;5;185m: connection error[0m
+авг 26 08:27:41 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[41821]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x621f344b4320> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 08:27:41 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[41821]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x621f344b4320> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43316]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/cpugovctl set performance][0m
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43316]: Error executing command as another user: Not authorized
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update cpu governor policy
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43321]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 0][0m
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43321]: Error executing command as another user: Not authorized
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 09:16:24 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [43307,43307]: ioprio was (0) but we expected (4)
+авг 26 09:16:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC xdg-desktop-por[41890]: [0;1;38;5;185mFailed to get application states: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.Failed: GetAppState currently only supported in Cinnamon[0m
+авг 26 09:19:26 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43519]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 1][0m
+авг 26 09:19:26 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43519]: Error executing command as another user: Not authorized
+авг 26 09:19:26 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:19:26 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:19:26 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43532]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/cpugovctl set performance][0m
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43532]: Error executing command as another user: Not authorized
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update cpu governor policy
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43537]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 0][0m
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43537]: Error executing command as another user: Not authorized
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 09:19:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [43526,43526]: ioprio was (0) but we expected (4)
+авг 26 09:19:30 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43552]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 1][0m
+авг 26 09:19:30 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43552]: Error executing command as another user: Not authorized
+авг 26 09:19:30 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:19:30 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:19:30 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43578]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/cpugovctl set performance][0m
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43578]: Error executing command as another user: Not authorized
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update cpu governor policy
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[43583]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 0][0m
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43583]: Error executing command as another user: Not authorized
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 09:19:36 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [43571,43571]: ioprio was (0) but we expected (4)
+авг 26 09:20:03 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [43596,43596]: ioprio was (0) but we expected (4)
+авг 26 09:25:49 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [43678,43678]: ioprio was (0) but we expected (4)
+авг 26 09:36:26 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: QThread[43685]: segfault at 60 ip 0000720a213783ec sp 0000720a03ffe980 error 6 in libX11.so.6.4.0[720a21350000+8c000] likely on CPU 7 (core 11, socket 0)
+авг 26 09:36:29 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Could not inspect tasks for client [43678]! Skipping ioprio optimisation.
+авг 26 09:51:31 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[44216]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 1][0m
+авг 26 09:51:31 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[44216]: Error executing command as another user: Not authorized
+авг 26 09:51:31 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 09:51:31 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 09:51:31 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[47860]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/cpugovctl set performance][0m
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[47860]: Error executing command as another user: Not authorized
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update cpu governor policy
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[47865]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 0][0m
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[47865]: Error executing command as another user: Not authorized
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 11:42:37 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [47853,47853]: ioprio was (0) but we expected (4)
+авг 26 11:42:43 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [47879,47879]: ioprio was (0) but we expected (4)
+авг 26 11:43:09 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: QThread[47886]: segfault at 60 ip 00007955b7eee3ec sp 00007955a2ffd980 error 6 in libX11.so.6.4.0[7955b7ec6000+8c000] likely on CPU 4 (core 8, socket 0)
+авг 26 11:43:13 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Could not inspect tasks for client [47879]! Skipping ioprio optimisation.
+авг 26 11:43:27 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [47931,47931]: ioprio was (0) but we expected (4)
+авг 26 11:44:17 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Skipping ioprio on client [47954,47954]: ioprio was (0) but we expected (4)
+авг 26 11:48:48 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[48146]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x61d471b54ac0> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 11:48:55 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[41821]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x621f344b4320> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 12:00:20 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[48736]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x634d6ff8e0b0> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 13:07:56 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC wireplumber[41821]: [0;1;38;5;185m<WpPortalPermissionStorePlugin:0x621f344b4320> Failed to call Lookup: GDBus.[0;1;39mError[0;1;38;5;185m:org.freedesktop.portal.Error.NotFound: No entry for camera[0m
+авг 26 13:11:23 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: QThread[47975]: segfault at 60 ip 000070f7879783ec sp 000070f703fbb980 error 6 in libX11.so.6.4.0[70f787950000+8c000] likely on CPU 4 (core 8, socket 0)
+авг 26 13:11:25 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC pkexec[50519]: [0;1;38;5;185mdizatorr: [0;1;39mError[0;1;38;5;185m executing command as another user: Not authorized [USER=root] [TTY=unknown] [CWD=/home/dizatorr] [COMMAND=/usr/libexec/procsysctl split_lock_mitigate 1][0m
+авг 26 13:11:25 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[50519]: Error executing command as another user: Not authorized
+авг 26 13:11:25 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: External process failed with exit code 127
+авг 26 13:11:25 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Output was:
+авг 26 13:11:25 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Failed to update split_lock_mitigate
+авг 26 13:11:25 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC gamemoded[43314]: ERROR: Could not inspect tasks for client [47954]! Skipping ioprio optimisation.
+авг 26 13:23:50 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC kernel: traps: file-roller[46774] general protection fault ip:7ae58295fdaf sp:7ffc4f2621d0 error:0 in libgtk-3.so.0.2409.32[7ae582683000+3ae000]
+авг 26 13:23:50 dizatorr-HP-ProBook-450-15-6-inch-G9-Notebook-PC org.gnome.FileRoller.desktop[51210]: GDBus.Error:org.freedesktop.DBus.Error.NoReply: Message recipient disconnected from message bus without replying
