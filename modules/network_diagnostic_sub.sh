@@ -38,7 +38,7 @@ check_network_diagnostic_dependencies() {
     return 0
 }
 
-check_network_inteface() {
+check_network_interface() {
     # Проверка существования конфига
     if ! load_config "$config_file" true false ; then
         echo -e "${RED}Создайте файл: $config_file${NC}"
@@ -68,7 +68,7 @@ check_network_inteface() {
     
     log_debug "Интерфейс найден: $interface"
     
-    return "$interface"
+    echo "$interface"
 }
 
 # --- Главное меню ---

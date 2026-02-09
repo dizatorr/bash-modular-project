@@ -1,35 +1,41 @@
-
-# === Логи и временные файлы ===
-log/
+```
+# Logs and temp files
 *.log
-*.txt
+*.tmp
+*.swp
 
-# === Блокировки и временные файлы системы ===
-/tmp/
-*.lock
-/lock
-*.pid
+# Environment
+.env
+.env.local
+*.env.*
 
-# === Резервные копии ===
-*.bak
-*.backup
+# Editors
+.vscode/
+.idea/
 
-# === Виртуальные окружения (на случай расширений) ===
+# Dependencies
+node_modules/
 venv/
-env/
 .venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
 
-# === Локальные настройки ===
-config/local.conf
-secrets.sh
+# Build artifacts
+dist/
+build/
+target/
+*.pyc
+*.class
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
-# === Исключения для важных файлов ===
-!config/settings.conf
-!modules/*.sh
-
-# Секретные файлы
-_*.sh
-config/smb_quick.conf
-
-# === Артефакты GitHub ===
-.github/workflows/test.sh
+# System files
+.DS_Store
+Thumbs.db
+```
