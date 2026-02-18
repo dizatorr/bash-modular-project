@@ -1,12 +1,26 @@
 #!/usr/bin/env bash
 # === MENU: Выбрать сетевой интерфейс
-# === FUNC: select_network_interface
+# === FUNC: net_select_interface
 # Автор: Diz A Torr
 # Версия: 1.0
 # Лицензия: MIT
 # Описание: Выбор сетевого интерфейса для диагностики
+#
+# === Список функций ===
+# - net_select_interface() - основная функция модуля, позволяет выбрать сетевой интерфейс
+# - net_write_interface_to_config() - внутренняя функция для записи интерфейса в конфигурацию
+#
+# === Требования ===
+# - Внешние зависимости: nmcli, ip
+# - Зависимости от других модулей: log_info, log_warn (из lib.sh)
+# - Права доступа: стандартные
+# - Требуемые переменные окружения: DNSMASQ_CONF, LOG_DIR (из lib.sh)
+#
+# === Примеры использования ===
+# - вызов net_select_interface напрямую
+# - вызов net_select_interface с параметром: config_file
 
-select_network_interface() {
+net_select_interface() {
     local config_file="${1:-$DNSMASQ_CONF}"
     
     # Проверка существования конфига
@@ -88,7 +102,7 @@ select_network_interface() {
     fi
 
     # Записываем выбранный интерфейс в конфиг
-    if write_interface_to_config "$config_file" "$selected_interface"; then
+    if net_write_interface_to_config "$config_file" "$selected_interface"; then
         log_info "Выбран и записан интерфейс: $selected_interface"
         echo "$selected_interface"
         return 0
@@ -99,7 +113,7 @@ select_network_interface() {
 }
 
 # Вспомогательная функция для записи интерфейса в конфиг
-write_interface_to_config() {
+net_write_interface_to_config() {
     local config_file="$1"
     local interface="$2"
     local temp_file

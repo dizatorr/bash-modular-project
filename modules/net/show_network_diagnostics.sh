@@ -65,12 +65,12 @@ show_network_diagnostics() {
     echo
     read -r -p "Создать хостфайл на основе этого отчета? (y/N): " create_hosts
     if [[ "${create_hosts,,}" =~ ^(y|yes)$ ]]; then
-        create_hosts_file_from_report "$selected_file" "$hosts_dir"
+        net_create_hosts_from_report "$selected_file" "$hosts_dir"
     fi
 }
 
 # Функция для создания хостфайла из отчета диагностики
-create_hosts_file_from_report() {
+net_create_hosts_from_report() {
     local report_file="$1"
     local hosts_dir="$2"
     
@@ -127,7 +127,7 @@ create_hosts_file_from_report() {
 }
 
 # Функция для просмотра существующих хостфайлов
-show_hosts_files() {
+net_show_hosts_files() {
     local hosts_dir="${1:-security}"
     
     show_menu_header "Существующие хостфайлы"

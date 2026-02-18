@@ -2,9 +2,22 @@
 # === MENU: Монтирование SMB ресурсов
 # === FUNC: smb_mount_resource
 # Автор: Diz A Torr
-# Версия: 1.0
+# Версия: 1.1
 # Лицензия: MIT
 # Описание: Монтирование SMB ресурса в локальную файловую систему
+#
+# === Список функций ===
+# - smb_mount_resource() - основная функция модуля, монтирует SMB ресурс
+#
+# === Требования ===
+# - Внешние зависимости: mount.cifs, sudo
+# - Зависимости от других модулей: smb_load_resources, smb_get_display_names, smb_get_username
+# - Права доступа: sudo для монтирования
+# - Требуемые переменные окружения: RED, YELLOW, NC (из lib.sh)
+#
+# === Примеры использования ===
+# - вызов smb_mount_resource напрямую
+# - вызов smb_mount_resource с параметром: config_file
 
 smb_mount_resource() {
     local config_file="$1"
@@ -19,9 +32,9 @@ smb_mount_resource() {
 
     # Загружаем список ресурсов
     # shellcheck disable=SC2207
-    local shares_data=($(load_smb_resources "$config_file"))
+    local shares_data=($(smb_load_resources "$config_file"))
     # shellcheck disable=SC2207
-    local display_names=($(get_display_names "${shares_data[@]}"))
+    local display_names=($(smb_get_display_names "${shares_data[@]}"))
 
     if [[ ${#display_names[@]} -eq 0 ]]; then
         echo "Нет настроенных ресурсов. Сначала настройте список ресурсов."
@@ -49,7 +62,7 @@ smb_mount_resource() {
 
     # Получаем учетные данные
     local username password domain
-    username=$(get_smb_username)
+    username=$(smb_get_username)
 
     # Извлекаем домен из опций конфигурации
     if [[ -n "$options" && "$options" == *"domain="* ]]; then
@@ -85,8 +98,8 @@ smb_mount_resource() {
     local cred_file="" # Объявляем здесь, чтобы использовать вне блока if
 
     # Добавляем базовые опции
-    options_array+=("uid=$(id -u)")
-    options_array+=("gid=$(id -g)")
+    options_array+=("uid=$(id -u "$LOGNAME")")
+    options_array+=("gid=$(id -g "$LOGNAME")")
     options_array+=("iocharset=utf8")
     options_array+=("sec=ntlmssp")
 

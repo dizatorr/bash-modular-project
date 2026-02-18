@@ -5,10 +5,23 @@
 # Версия: 1.0
 # Лицензия: MIT
 # Описание: Сканирование устройств в сети и создание отчета
+#
+# === Список функций ===
+# - scan_network_devices() - основная функция модуля, выполняет сканирование сети
+#
+# === Требования ===
+# - Внешние зависимости: ping, nslookup, ip, arp
+# - Зависимости от других модулей: net_select_interface
+# - Права доступа: стандартные
+# - Требуемые переменные окружения: LOG_DIR, DNSMASQ_CONF (из lib.sh)
+#
+# === Примеры использования ===
+# - вызов scan_network_devices напрямую
+# - вызов scan_network_devices с параметрами: config_file interface
 
 scan_network_devices() {
     local config_file="${1:-$DNSMASQ_CONF}"
-    local interface="${2:-$(select_network_interface "$config_file")}"
+    local interface="${2:-$(net_select_interface "$config_file")}"
 
     log_debug "Чтение конфига: $config_file"
     

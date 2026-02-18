@@ -8,7 +8,7 @@
 
 network_interface_stats() {
     local config_file="${1:-$DNSMASQ_CONF}"
-    local interface="${2:-$(select_network_interface "$config_file")}"
+    local interface="${2:-$(net_select_interface "$config_file")}"
     
     echo -e "${BLUE}Статистика интерфейса $interface:${NC}"
     

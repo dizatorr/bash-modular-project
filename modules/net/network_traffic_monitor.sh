@@ -7,7 +7,7 @@
 # Описание: Мониторинг сетевого трафика в реальном времени
 
 network_traffic_monitor() {
-    local interface="${2:-$(select_network_interface "$config_file")}"
+    local interface="${2:-$(net_select_interface "$config_file")}"
     
     echo -e "${BLUE}Мониторинг трафика в реальном времени${NC}"
     echo -e "${YELLOW}Нажмите Ctrl+C для остановки${NC}"

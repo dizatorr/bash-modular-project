@@ -5,10 +5,26 @@
 # Версия: 1.0
 # Лицензия: MIT
 # Описание: Интерактивное подключение к SMB ресурсу через smbclient
+#
+# === Список функций ===
+# - smb_interactive_connect() - основная функция модуля, обеспечивает интерактивное подключение
+# - smb_get_username() - внутренняя функция для получения имени пользователя
+# - smb_load_resources() - внутренняя функция для загрузки списка ресурсов
+# - smb_get_display_names() - внутренняя функция для получения отображаемых имен ресурсов
+#
+# === Требования ===
+# - Внешние зависимости: smbclient
+# - Зависимости от других модулей: нет
+# - Права доступа: стандартные
+# - Требуемые переменные окружения: GREEN, RED, YELLOW, NC (из lib.sh)
+#
+# === Примеры использования ===
+# - вызов smb_interactive_connect напрямую
+# - вызов smb_interactive_connect с параметром: config_file
 
 # --- Вспомогательные функции ---
 # Получает имя пользователя с учетом дефолтного значения
-get_smb_username() {
+smb_get_username() {
     local username
     if [[ -n "$SMB_DEFAULT_USER" ]]; then
         echo "$SMB_DEFAULT_USER"
@@ -19,7 +35,7 @@ get_smb_username() {
 }
 
 # Загружает ресурсы из конфигурационного файла
-load_smb_resources() {
+smb_load_resources() {
     local config_file="$1"
     local resources=()
     
@@ -41,7 +57,7 @@ load_smb_resources() {
 }
 
 # Извлекает отображаемые имена из данных ресурсов
-get_display_names() {
+smb_get_display_names() {
     local resources=("$@")
     local names=()
     local display_name
@@ -62,8 +78,8 @@ smb_interactive_connect() {
     local server share username
 
     # Загружаем список ресурсов
-    local shares_data=($(load_smb_resources "$config_file"))
-    local display_names=($(get_display_names "${shares_data[@]}"))
+    local shares_data=($(smb_load_resources "$config_file"))
+    local display_names=($(smb_get_display_names "${shares_data[@]}"))
 
     # Если есть настроенные ресурсы, показываем меню выбора
     if [[ ${#display_names[@]} -gt 0 ]]; then
@@ -105,7 +121,7 @@ smb_interactive_connect() {
     fi
 
     # Получаем имя пользователя с учетом дефолтного значения
-    username=$(get_smb_username)
+    username=$(smb_get_username)
 
     # Проверяем обязательные параметры и подключаемся
     if [[ -n "$server" && -n "$share" ]]; then

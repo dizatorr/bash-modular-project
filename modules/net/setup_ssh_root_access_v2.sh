@@ -5,9 +5,25 @@
 # Версия: 1.1
 # Лицензия: MIT
 # Описание: Настройка SSH доступа к учетной записи root на удаленных серверах
+#
+# === Список функций ===
+# - setup_ssh_root_access_v2() - основная функция модуля, обеспечивает настройку SSH root доступа
+# - net_get_ip_addresses() - внутренняя функция для получения IP-адресов
+# - net_setup_permit_root_login() - внутренняя функция для настройки разрешения root-входа
+# - net_copy_root_ssh_key() - внутренняя функция для копирования SSH-ключа root
+# - net_test_root_ssh_access() - внутренняя функция для проверки SSH-доступа
+#
+# === Требования ===
+# - Внешние зависимости: ssh, scp, sshpass
+# - Зависимости от других модулей: log_info, log_error, show_menu (из lib.sh)
+# - Права доступа: sudo для некоторых операций
+# - Требуемые переменные окружения: GREEN, RED, NC (из lib.sh)
+#
+# === Примеры использования ===
+# - вызов setup_ssh_root_access_v2 напрямую
 
 # Функция для получения списка IP-адресов из файла hosts
-get_ip_addresses() {
+net_get_ip_addresses() {
     local hosts_file="$1"
     local ip_list=()
     mapfile -t ip_list < <(awk '/^\[all\]/{flag=1;next} /^\[/{flag=0} flag && NF > 0 {print $1}' "$hosts_file")
@@ -15,7 +31,7 @@ get_ip_addresses() {
 }
 
 # Вспомогательная функция для настройки PermitRootLogin
-setup_permit_root_login() {
+net_setup_permit_root_login() {
     local ip_address="$1"
     local username="$2"
     local password="$3"
@@ -34,7 +50,7 @@ setup_permit_root_login() {
 }
 
 # Вспомогательная функция для копирования SSH-ключа root
-copy_root_ssh_key() {
+net_copy_root_ssh_key() {
     local ip_address="$1"
     local password="$2"
     
@@ -46,7 +62,7 @@ copy_root_ssh_key() {
 }
 
 # Функция для тестирования подключения к root
-test_root_ssh_access() {
+net_test_root_ssh_access() {
     local hosts_file="${1:-/home/tecon/security/hosts}"
     
     echo "Тестирование SSH доступа к root..."
@@ -127,7 +143,7 @@ setup_ssh_root_access() {
     for ip_address in "${ip_addresses[@]}"; do
         echo "Обработка сервера: $ip_address"
         
-        if setup_permit_root_login "$ip_address" "$username" "$password" "$root_password"; then
+        if net_setup_permit_root_login "$ip_address" "$username" "$password" "$root_password"; then
             echo "✓ Настройка PermitRootLogin на $ip_address выполнена"
         else
             echo "✗ Не удалось настроить PermitRootLogin на $ip_address"
@@ -135,7 +151,7 @@ setup_ssh_root_access() {
             continue
         fi
         
-        if copy_root_ssh_key "$ip_address" "$root_password"; then
+        if net_copy_root_ssh_key "$ip_address" "$root_password"; then
             echo "✓ SSH-ключ скопирован на $ip_address"
             ((success_count++))
         else

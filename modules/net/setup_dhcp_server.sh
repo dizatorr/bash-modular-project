@@ -8,7 +8,7 @@
 
 setup_dhcp_server() {
     local config_file="${1:-$DNSMASQ_CONF}"
-    local interface="${2:-$(select_network_interface "$config_file")}"
+    local interface="${2:-$(net_select_interface "$config_file")}"
     
     log_debug "Чтение конфига: $config_file"
 
@@ -35,7 +35,7 @@ setup_dhcp_server() {
     ip_cidr="${ip_cidr:-$listen_ip/24}"
 
     # Валидация введенного IP/маски
-    if ! validate_ip_cidr "$ip_cidr"; then
+    if ! net_validate_ip_cidr "$ip_cidr"; then
         log_error "Некорректный формат IP/маски: $ip_cidr"
         return 1
     fi
@@ -63,7 +63,7 @@ setup_dhcp_server() {
     log_info "Назначен IP: $ip_cidr на интерфейсе $interface"
 
     # Проверяем, занят ли порт 53
-    if ! check_and_kill_port_53; then
+    if ! net_check_and_kill_port_53; then
         log_warn "Не удалось освободить порт 53. Запуск dnsmasq может завершиться ошибкой."
     fi
 
@@ -95,7 +95,7 @@ setup_dhcp_server() {
 }
 
 # Функция для проверки и освобождения порта 53
-check_and_kill_port_53() {
+net_check_and_kill_port_53() {
     local max_attempts=3
     local attempt=0
     
@@ -171,7 +171,7 @@ check_and_kill_port_53() {
 }
 
 # Вспомогательная функция для валидации IP/маски
-validate_ip_cidr() {
+net_validate_ip_cidr() {
     local ip_cidr="$1"
     local ip mask
     

@@ -66,7 +66,7 @@ setup_ssh_root_access() {
         log_info "Обработка сервера: $ip_address"
         
         # Настройка PermitRootLogin
-        if setup_permit_root_login "$ip_address" "$username" "$password" "$root_password"; then
+        if net_setup_permit_root_login "$ip_address" "$username" "$password" "$root_password"; then
             log_info "✓ Настройка PermitRootLogin на $ip_address выполнена"
         else
             log_error "✗ Не удалось настроить PermitRootLogin на $ip_address"
@@ -75,7 +75,7 @@ setup_ssh_root_access() {
         fi
         
         # Копирование SSH-ключа root
-        if copy_root_ssh_key "$ip_address" "$username" "$password" "$root_password"; then
+        if net_copy_root_ssh_key "$ip_address" "$username" "$password" "$root_password"; then
             log_info "✓ SSH-ключ скопирован на $ip_address"
             ((success_count++))
         else
@@ -99,7 +99,7 @@ setup_ssh_root_access() {
 }
 
 # Вспомогательная функция для настройки PermitRootLogin
-setup_permit_root_login() {
+net_setup_permit_root_login() {
     local ip_address="$1"
     local username="$2"
     local password="$3"
@@ -121,7 +121,7 @@ setup_permit_root_login() {
 }
 
 # Вспомогательная функция для копирования SSH-ключа root
-copy_root_ssh_key() {
+net_copy_root_ssh_key() {
     local ip_address="$1"
     local username="$2"
     local password="$3"
@@ -136,7 +136,7 @@ copy_root_ssh_key() {
 }
 
 # Функция для тестирования подключения к root
-test_root_ssh_access() {
+net_test_root_ssh_access() {
     local hosts_file="${1:-/home/tecon/security/hosts}"
     
     log_info "Тестирование SSH доступа к root..."

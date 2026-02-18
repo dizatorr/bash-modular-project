@@ -5,10 +5,24 @@
 # Версия: 1.0 (субмодульная версия)
 # Лицензия: MIT
 # Описание: Комплексная диагностика сети с возможностью запуска локального DHCP/DNS
+#
+# === Список функций ===
+# - network_diagnostic_sub() - основная функция модуля, обеспечивает комплексную диагностику
+# - net_check_diagnostic_deps() - внутренняя функция для проверки зависимостей
+# - net_check_interface() - внутренняя функция для проверки сетевого интерфейса
+#
+# === Требования ===
+# - Внешние зависимости: ping, nslookup, ip, nmcli, iftop, tcpdump, nmap
+# - Зависимости от других модулей: net_select_interface
+# - Права доступа: sudo для настройки сети
+# - Требуемые переменные окружения: LOG_DIR, DNSMASQ_CONF (из lib.sh)
+#
+# === Примеры использования ===
+# - вызов network_diagnostic_sub напрямую
 
 # Проверка зависимостей
 
-check_network_diagnostic_dependencies() {
+net_check_diagnostic_deps() {
     local config_file="$DNSMASQ_CONF"
     local deps=("ping" "nslookup" "ipcalc" "dnsmasq" "ip" "nmcli")
     local missing=()
@@ -38,7 +52,7 @@ check_network_diagnostic_dependencies() {
     return 0
 }
 
-check_network_inteface() {
+net_check_interface() {
     # Проверка существования конфига
     if ! load_config "$config_file" true false ; then
         echo -e "${RED}Создайте файл: $config_file${NC}"
@@ -77,7 +91,7 @@ network_diagnostic_sub() {
     local config_file="$DNSMASQ_CONF"
 
     # Проверяем зависимости
-    check_network_diagnostic_dependencies || return 1
+    net_check_diagnostic_deps || return 1
 
     # Автоматически загружаем все модули из директории modules/net
     load_modules "$module_dir" || {
